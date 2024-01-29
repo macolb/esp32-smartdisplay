@@ -9,6 +9,8 @@
 
 #include <mutex>
 
+//#define TFT_ORIENTATION_PORTRAIT_INV
+
 // Mutex to access lvgl if multi-threaded
 extern std::recursive_mutex lvgl_mutex;
 // Initialize the display and touch
