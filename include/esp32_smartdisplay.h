@@ -1,15 +1,25 @@
-#pragma once
+#ifndef ESP32_SMARTDISPLAY_H
+#define ESP32_SMARTDISPLAY_H
 
 #include <Arduino.h>
-#include <SPI.h>
 #include <lvgl.h>
-#ifdef ESP32_3248S035C
-#include <Wire.h>
+
+// LVGL lines buffered
+#define LVGL_PIXEL_BUFFER_LINES 16
+
+// Use last PWM_CHANNEL for backlight
+#define PWM_CHANNEL_BCKL (SOC_LEDC_CHANNEL_NUM - 1)
+#define PWM_FREQ_BCKL 20000
+#define PWM_BITS_BCKL 8
+#define PWM_MAX_BCKL ((1 << PWM_BITS_BCKL) - 1)
+
+// Exported functions
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
 #include <mutex>
-
-//#define TFT_ORIENTATION_PORTRAIT_INV
 
 // Mutex to access lvgl if multi-threaded
 extern std::recursive_mutex lvgl_mutex;
@@ -60,84 +70,8 @@ extern void smartdisplay_tft_wake();
 extern SPIClass spi_ili9431;
 extern SPIClass spi_xpt2046;
 #endif
-
-// ESP32_3248S035R
-#ifdef ESP32_3248S035R
-#define TFT_WIDTH 320
-#define TFT_HEIGHT 480
-#define ST7796
-#define ST7796_SPI_SCLK 14
-#define ST7796_SPI_MOSI 13
-#define ST7796_SPI_MISO 12
-#define ST7796_PIN_CS 15
-#define ST7796_PIN_DC 2
-#define ST7796_SPI_FREQ 80000000
-#define ST7796_PIN_BL 27
-#define ST7796_PWM_CHANNEL_BL 12
-#define ST7796_PWM_FREQ_BL 5000
-#define ST7796_PWM_BITS_BL 8
-#define ST7796_PWM_MAX_BL ((1 << ST7796_PWM_BITS_BL) - 1)
-#define XPT2046
-#define XPT2046_SPI_SCLK 14
-#define XPT2046_SPI_MOSI 13
-#define XPT2046_SPI_MISO 12
-#define XPT2046_SPI_FREQ 2000000
-#define XPT2046_PIN_INT 36
-#define XPT2046_PIN_CS 33
-// Calibration 320x480
-#define XPT2046_MIN_X 256
-#define XPT2046_MAX_X 3860
-#define XPT2046_MIN_Y 180
-#define XPT2046_MAX_Y 3900
-
-extern SPIClass spi_st7796;
-#define spi_xpt2046 spi_st7796
+#ifdef __cplusplus
+}
 #endif
 
-#ifdef ESP32_3248S035C
-#define TFT_WIDTH 320
-#define TFT_HEIGHT 480
-#define ST7796
-#define ST7796_SPI_SCLK 14
-#define ST7796_SPI_MOSI 13
-#define ST7796_SPI_MISO 12
-#define ST7796_PIN_CS 15
-#define ST7796_PIN_DC 2
-#define ST7796_SPI_FREQ 80000000
-#define ST7796_PIN_BL 27
-#define ST7796_PWM_CHANNEL_BL 12
-#define ST7796_PWM_FREQ_BL 5000
-#define ST7796_PWM_BITS_BL 8
-#define ST7796_PWM_MAX_BL ((1 << ST7796_PWM_BITS_BL) - 1)
-#define GT911
-#define GT911_IIC_SDA 33
-#define GT911_IIC_SCL 32
-#define GT911_IIC_RST 25
-
-extern SPIClass spi_st7796;
-extern TwoWire i2c_gt911;
 #endif
-
-// Build in RGB LED
-#define LED_PIN_R 4
-#define LED_PIN_G 16
-#define LED_PIN_B 17
-// PWM channels for RGB
-#define LED_PWM_FREQ 5000
-#define LED_PWM_CHANNEL_R 13
-#define LED_PWM_CHANNEL_G 14
-#define LED_PWM_CHANNEL_B 15
-#define LED_PWM_BITS 8
-#define LED_PWM_MAX ((1 << LED_PWM_BITS) - 1)
-
-// Photo resistor
-#define CDS_PIN 34 // ANALOG_PIN_0
-
-// Audio out
-#define AUDIO_PIN 26
-
-// TF Card
-#define TF_PIN_CS 5
-#define TF_PIN_MOSI 23
-#define TF_PIN_SCLK 18
-#define TF_PIN_MISC 19
